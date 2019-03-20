@@ -31,19 +31,28 @@ void setup() {
 }
 
 void loop() {
-  TestRiflessi("Premi il BOTTONE 1 per INIZIARE LA PROVA",PulsanteAccensione,LedRandom)
+  TestRiflessi("Premi il BOTTONE 1 per INIZIARE LA PROVA",PulsanteAccensione,LedRandom);
 
 }
 
 void TestRiflessi(String inizio,int domanda,int risposta)
 {
   Serial.println(inizio);
-  while(digitalRead(PulsanteAccensione) == HIGH) 
+  while(digitalRead(PulsanteAccensione) == LOW) {};
+  while(digitalRead(PulsanteAccensione) == HIGH)
   {
     digitalWrite(LedRandom,HIGH);
-    delay(random(1000, 10000));
+    delay(random(1000, 10000);
+    a = millis();
     while(digitalRead(PulsanteTempoLed) == HIGH)
     {
+      digitalWrite(Buzzer,HIGH);
+      delay(random(1000,10000));
+      b = millis();
+      while(digitalRead(PulsanteBuzzer) == HIGH)
+      {
+        Serial.print(b - a);
+      }
       
     }
   }
