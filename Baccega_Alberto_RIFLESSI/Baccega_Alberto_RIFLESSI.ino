@@ -7,6 +7,8 @@ int Buzzer;               //BUZZER che si accenderà in modo RANDOMDOMICO
 int PulsanteBuzzer;       //Pulsante per spegnere il BUZZER e poter calcolare i MILLISECONDI FINALI
 int LedVerde;             //LED VERDE se il tempo è minore di 1000 ms
 int LedRosso;             //LED ROSSO se il tempo è maggiore dei 1000 ms
+int TempoMinimo;          //Tempo minimo così da far crashare il programma in caso di tasti premuti a caso
+int TempoMinimoLed;       //Tempo minimo peril LED ROSSO O VERDE a seconda dei millisecondi
 int AppoggioA;            //Campo per poter utilizzare la VARIABILE A nel METODO TestRiflessi
 int AppoggioB;            //Campo per poter utilizzare la VARIABILE B nel METODO TestRiflessi
 int AppoggioC;            //Campo per poter utilizzare la VARIABILE C nel METODO TestRiflessi
@@ -23,6 +25,8 @@ void setup() {
   PulsanteBuzzer = 7;
   LedVerde = 8;
   LedRosso = 9;
+  TempoMinimo = 70;
+  TempoMinimoLed = 1000;
   Serial.begin(9600);
   pinMode(PulsanteAccensione, INPUT);  //Inserisco INPUT per tutti i PULSANTI
   pinMode(LedRandom, OUTPUT);
@@ -39,35 +43,41 @@ void loop() {
 
 void TestRiflessi(String inizio,int domanda,int risposta, int a, int b, int c, int d, int e,int f)
 {
-  Serial.println(inizio);
-  while(digitalRead(PulsanteAccensione) == LOW) {};
-  while(digitalRead(PulsanteAccensione) == HIGH)
+  if ( e < TempoMinimo && c < TempoMinimo )
   {
-    d = millis();
-    digitalWrite(LedRandom,HIGH);
-    delay(random(1000, 5000));
-    a = millis();
-    e = a - d;
-    while(digitalRead(PulsanteTempoLed) == HIGH)
+    Serial.println("Test non VALIDO. Premere il PULSANTE DI ACCENSIONE per iniziare il test");
+  }
+  else
+  {
+    Serial.println(inizio);
+    while(digitalRead(PulsanteAccensione) == LOW) {};
+    while(digitalRead(PulsanteAccensione) == HIGH)
     {
-      f = millis();
-      digitalWrite(Buzzer,HIGH);
-      delay(random(1000,5000));
-      b = millis();
-      c = b - f;
-      while(digitalRead(PulsanteBuzzer) == HIGH)
+      d = millis();
+      digitalWrite(LedRandom,HIGH);
+      delay(random(1000, 5000));
+      a = millis();
+      e = a - d;
+      while(digitalRead(PulsanteTempoLed) == HIGH)
       {
-        Serial.println("LED:" + String(e) + "BUZZER:" + String(c));
-        if ( e > 1000 && c > 1000 )
+        f = millis();
+        digitalWrite(Buzzer,HIGH);
+        delay(random(1000,5000));
+        b = millis();
+        c = b - f;
+        while(digitalRead(PulsanteBuzzer) == HIGH)
         {
+          Serial.println("LED:" + String(e) + "BUZZER:" + String(c));
+          if ( e > TempoMinimoLed && c > TempoMinimoLed )
+          {
           digitalWrite(LedRosso, HIGH);
-        }
-        else
-        {
+          }
+          else
+          {
           digitalWrite(LedVerde, HIGH);
-        }
-      }    
+          }
+        }    
+      }
     }
   }
-  
 }
