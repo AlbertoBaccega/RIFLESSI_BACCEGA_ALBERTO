@@ -50,7 +50,7 @@ void TestRiflessi(String inizio,int domanda,int risposta, int a, int b, int c, i
   else
   {
     Serial.println(inizio);
-    while(digitalRead(PulsanteAccensione) == LOW) {};
+    while(digitalRead(PulsanteAccensione) == LOW) {}
     while(digitalRead(PulsanteAccensione) == HIGH)
     {
       d = millis();
