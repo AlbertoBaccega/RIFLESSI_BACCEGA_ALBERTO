@@ -43,41 +43,44 @@ void loop() {
 
 void TestRiflessi(String inizio,int domanda,int risposta, int a, int b, int c, int d, int e,int f)
 {
-  if ( e < TempoMinimo && c < TempoMinimo )
-  {
-    Serial.println("Test non VALIDO. Premere il PULSANTE DI ACCENSIONE per iniziare il test");
-  }
-  else
-  {
     Serial.println(inizio);
-    while(digitalRead(PulsanteAccensione) == LOW) {}
-    while(digitalRead(PulsanteAccensione) == HIGH)
-    {
-      d = millis();
-      digitalWrite(LedRandom,HIGH);
+    while(digitalRead(PulsanteAccensione) == LOW) {}        
       delay(random(1000, 5000));
-      a = millis();
-      e = a - d;
-      while(digitalRead(PulsanteTempoLed) == HIGH)
+      d = millis();       
+      digitalWrite(LedRandom,HIGH);         
+      while(digitalRead(PulsanteTempoLed) == LOW) {}
+      a = millis();  
+      e = a - d;           
+      digitalWrite(LedRandom,LOW);
+      if ( e < TempoMinimo)
       {
+        Serial.println("Test non VALIDO perchè" + String(e) + "minore del TEMPO MINIMO DI RISPOSTA");
+      }    
+      while(digitalRead(PulsanteTempoLed) == LOW) {}        
+        delay(random(1000,5000));  
         f = millis();
         digitalWrite(Buzzer,HIGH);
-        delay(random(1000,5000));
+        while(digitalRead(PulsanteBuzzer) == LOW) {}
         b = millis();
-        c = b - f;
-        while(digitalRead(PulsanteBuzzer) == HIGH)
+        c = b - f;          
+        digitalWrite(Buzzer,LOW);
+        if ( c < TempoMinimo)
         {
+          Serial.println("Test non VALIDO perchè" + String(c) + "minore del TEMPO MINIMO DI RISPOSTA");
+        }
+        while(digitalRead(PulsanteBuzzer) == LOW) {}
           Serial.println("LED:" + String(e) + "BUZZER:" + String(c));
           if ( e > TempoMinimoLed && c > TempoMinimoLed )
-          {
-          digitalWrite(LedRosso, HIGH);
-          }
-          else
-          {
-          digitalWrite(LedVerde, HIGH);
-          }
+            {
+              digitalWrite(LedRosso, HIGH);
+              delay(3000);
+              digitalWrite(LedRosso, LOW);
+            }
+            else
+            {
+              digitalWrite(LedVerde, HIGH);
+              delay(3000);
+              digitalWrite(LedVerde, LOW);
+            }
         }    
-      }
-    }
-  }
-}
+
